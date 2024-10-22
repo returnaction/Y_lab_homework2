@@ -86,7 +86,7 @@ public class Main {
     }
 
     private static void habitMenu() {
-
+        // test
     }
 
     private static void accountSettings() {
