@@ -1,7 +1,9 @@
 package com.jdbcproject2;
 
+import com.jdbcproject2.model.Habit;
 import com.jdbcproject2.model.User;
 import com.jdbcproject2.repository.DbUtils;
+import com.jdbcproject2.repository.HabitRepository;
 import com.jdbcproject2.repository.UserRepository;
 
 import java.util.Objects;
@@ -79,6 +81,7 @@ public class Main {
                 // привычки
             } else if (input == 2) {
                 // todo работает тут
+                habitMenu();
             }
 
 
@@ -87,7 +90,112 @@ public class Main {
 
     // part of user menu
     private static void habitMenu() {
+        String inputStr = null;
+        int input = -1;
+        do {
+            System.out.println("\nPress 0 - Назад");
+            System.out.println("Press 1 - Показать список привычек");
+            System.out.println("Press 2 - Добавить привычку");
+            System.out.println("Press 3 - Редактировать привычку");
+            System.out.println("Press 4 - Удалить привычку");
 
+            try {
+                inputStr = scan.nextLine();
+                input = Integer.parseInt(inputStr);
+
+                if (input == 0) {
+                    break;
+                } else if (input == 1) {
+                    System.out.println("Press 0 - Назад");
+                    System.out.println("Press 1 - Фильтровать привычки по статусу выполнения");
+                    System.out.println("Press 2 - Фильтровать привычки по дате создания");
+
+                    do {
+                        try {
+                            inputStr = scan.nextLine();
+                            input = Integer.parseInt(inputStr);
+
+                            if (input == 0) {
+                                break;
+                            } else if (input == 1) {
+                                loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), null);
+
+                                for (Habit habit : loggedUser.habits) {
+                                    System.out.println(habit.toString());
+                                }
+                            } else if (input == 2) {
+                                loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), "создания");
+                            } else {
+                                System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз");
+                        }
+                    } while (input == 0 || input == 1 || input == 2);
+
+                } else if (input == 2) {
+                    Habit habit = new Habit();
+                    String title = null;
+                    String description = null;
+                    String frequency = null;
+                    boolean isCompleted = false;
+                    int userId = loggedUser.getId();
+
+
+                    System.out.println("Введите имя привычки");
+                    do {
+                        title = scan.nextLine().trim();
+                    } while (title.isEmpty());
+
+                    System.out.println("Введите описание");
+                    description = scan.nextLine().trim();
+
+                    System.out.println("Введите частоту ежедневно/еженедельно");
+                    do {
+                        frequency = scan.nextLine().trim();
+                        if (frequency.equals("ежедневно") || frequency.equals("еженедельно")) {
+                            break;
+                        } else {
+                            System.out.println("\t\nВыберите между ежедневно/еженедельно");
+                        }
+                    } while (true);
+
+                    System.out.println("Выполнена сегодня? да/нет");
+
+                    do {
+                        String completed = scan.nextLine().trim();
+                        if (completed.matches("да") || completed.matches("нет")) {
+                            isCompleted = true;
+                            break;
+                        } else {
+                            System.out.println("\n\tВыберете между да/нет");
+                        }
+                    } while (true);
+
+                    habit = new Habit();
+                    habit.setTitle(title);
+                    habit.setDescription(description);
+                    habit.setFrequency(frequency);
+                    habit.setCompleted(isCompleted);
+                    habit.setUserId(userId);
+
+                    loggedUser.habits.add(habit);
+                    HabitRepository.addHabit(habit, userId);
+
+                } else if (input == 3) {
+                    // nfr
+                    System.out.println();
+
+                } else if (input == 4) {
+
+                } else {
+                    System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз.");
+                }
+
+            } catch (NumberFormatException e) {
+                System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз.");
+            }
+        } while (true);
     }
 
     // part of user menu

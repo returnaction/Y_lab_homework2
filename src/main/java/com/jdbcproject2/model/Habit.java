@@ -15,6 +15,8 @@ public class Habit {
     private int userId;
 
     public Habit() {
+        SimpleDateFormat formater = new SimpleDateFormat("dd-MM-yyyy");
+        date = formater.format(new Date());
     }
 
     public Habit(int userId, boolean isCompleted, String date, String frequency, String description, String title, int id) {
@@ -46,6 +48,7 @@ public class Habit {
                 ", description='" + description + '\'' +
                 ", frequency='" + frequency + '\'' +
                 ", date='" + date + '\'' +
+                ", isCompleted=" + isCompleted +
                 ", userId=" + userId +
                 '}';
     }

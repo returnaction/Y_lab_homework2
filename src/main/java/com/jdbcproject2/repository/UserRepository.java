@@ -28,7 +28,7 @@ public class UserRepository {
     public static User getUserByEmail(String email) {
         User user = new User();
         List<Habit> habits = new ArrayList<>();
-        Habit habit = null;
+
 
         String userQuery = "SELECT * FROM users WHERE email = ?";
         String habitQuery = "SELECT * FROM habits WHERE user_id = ?";
@@ -45,8 +45,9 @@ public class UserRepository {
                 user.setPassword(userResultSet.getString("password"));
             }
 
+            habitStmt.setInt(1, user.getId());
             ResultSet habitResultSet = habitStmt.executeQuery();
-            if (habitResultSet.next()) {
+            while (habitResultSet.next()) {
                 int id = habitResultSet.getInt("id");
                 String title = habitResultSet.getString("title");
                 String description = habitResultSet.getString("description");
@@ -55,7 +56,7 @@ public class UserRepository {
                 boolean isCompleted = habitResultSet.getBoolean("isCompleted");
                 int userId = habitResultSet.getInt("user_Id");
 
-                habit = new Habit();
+                Habit habit = new Habit();
                 habit.setId(id);
                 habit.setTitle(title);
                 habit.setDescription(description);
@@ -67,11 +68,12 @@ public class UserRepository {
                 habits.add(habit);
             }
             user.setHabits(habits);
+            
         } catch (SQLException e) {
             System.out.println("Ошибка при получении пользователя по email: " + e.getMessage());
 
         }
-        return null;
+        return user;
     }
 
     public static int isEmailExist(String email) {
