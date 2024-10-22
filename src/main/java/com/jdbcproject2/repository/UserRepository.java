@@ -1,8 +1,11 @@
 package com.jdbcproject2.repository;
 
+import com.jdbcproject2.model.Habit;
 import com.jdbcproject2.model.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserRepository {
 
@@ -23,14 +26,47 @@ public class UserRepository {
     }
 
     public static User getUserByEmail(String email) {
-        String query = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = DbUtils.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"), rs.getString("password"));
+        User user = new User();
+        List<Habit> habits = new ArrayList<>();
+        Habit habit = null;
+
+        String userQuery = "SELECT * FROM users WHERE email = ?";
+        String habitQuery = "SELECT * FROM habits WHERE user_id = ?";
+        try (Connection connection = DbUtils.getConnection();
+             PreparedStatement userStmt = connection.prepareStatement(userQuery);
+             PreparedStatement habitStmt = connection.prepareStatement(habitQuery)) {
+            userStmt.setString(1, email);
+            ResultSet userResultSet = userStmt.executeQuery();
+
+            if (userResultSet.next()) {
+                user.setId(userResultSet.getInt("id"));
+                user.setName(userResultSet.getString("name"));
+                user.setEmail(userResultSet.getString("email"));
+                user.setPassword(userResultSet.getString("password"));
             }
+
+            ResultSet habitResultSet = habitStmt.executeQuery();
+            if (habitResultSet.next()) {
+                int id = habitResultSet.getInt("id");
+                String title = habitResultSet.getString("title");
+                String description = habitResultSet.getString("description");
+                String frequency = habitResultSet.getString("frequency");
+                String date = habitResultSet.getString("date");
+                boolean isCompleted = habitResultSet.getBoolean("isCompleted");
+                int userId = habitResultSet.getInt("user_Id");
+
+                habit = new Habit();
+                habit.setId(id);
+                habit.setTitle(title);
+                habit.setDescription(description);
+                habit.setFrequency(frequency);
+                habit.setDate(date);
+                habit.setCompleted(isCompleted);
+                habit.setUserId(userId);
+
+                habits.add(habit);
+            }
+            user.setHabits(habits);
         } catch (SQLException e) {
             System.out.println("Ошибка при получении пользователя по email: " + e.getMessage());
 

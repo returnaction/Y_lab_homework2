@@ -78,17 +78,19 @@ public class Main {
                 accountSettings();
                 // привычки
             } else if (input == 2) {
-
+                // todo работает тут
             }
 
 
         } while (loggedUser != null);
     }
 
+    // part of user menu
     private static void habitMenu() {
-        // test
+
     }
 
+    // part of user menu
     private static void accountSettings() {
 
         String inputStr = null;

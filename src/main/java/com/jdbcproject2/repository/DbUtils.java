@@ -69,7 +69,9 @@ public class DbUtils {
                     "user_id INT NOT NULL," +
                     "title VARCHAR(100) NOT NULL," +
                     "description TEXT," +
+                    "date VARCHAR(10) NOT NULL," +
                     "frequency VARCHAR(50)," +
+                    "isCompleted BOOLEAN DEFAULT false," +
                     "FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE" + // Связь один ко многим
                     ");";
             int resultHabitTable = statement.executeUpdate(createHabitTableQuery);
