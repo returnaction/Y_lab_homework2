@@ -29,7 +29,7 @@ public class HabitRepository {
     public static List<Habit> getAllHabits(int userId, String filter) {
         List<Habit> habits = new ArrayList<>();
         String query = null;
-        if (filter == null) {
+        if (filter.equals("создания")) {
             query = "SELECT * FROM habits WHERE user_id = ? ORDER BY date ASC;";
         } else if (filter.equals("выполнения")) {
             query = "SELECT * FROM habits WHERE user_id = ? ORDER BY isCompleted ASC, date ASC;";
@@ -42,9 +42,10 @@ public class HabitRepository {
 
             while (resultSet.next()) {
                 Habit habit = new Habit();
-                habit.setUserId(resultSet.getInt("id"));
+                habit.setId(resultSet.getInt("id"));
                 habit.setTitle(resultSet.getString("title"));
                 habit.setDescription(resultSet.getString("description"));
+                habit.setDescription(resultSet.getString("frequency"));
                 habit.setDate(resultSet.getString("date"));
                 habit.setCompleted(resultSet.getBoolean("isCompleted"));
                 habit.setUserId(resultSet.getInt("user_Id"));

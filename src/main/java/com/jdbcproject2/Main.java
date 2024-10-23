@@ -106,11 +106,11 @@ public class Main {
                 if (input == 0) {
                     break;
                 } else if (input == 1) {
-                    System.out.println("Press 0 - Назад");
-                    System.out.println("Press 1 - Фильтровать привычки по статусу выполнения");
-                    System.out.println("Press 2 - Фильтровать привычки по дате создания");
-
+                    
                     do {
+                        System.out.println("Press 0 - Назад");
+                        System.out.println("Press 1 - Фильтровать привычки по статусу выполнения");
+                        System.out.println("Press 2 - Фильтровать привычки по дате создания");
                         try {
                             inputStr = scan.nextLine();
                             input = Integer.parseInt(inputStr);
@@ -118,13 +118,16 @@ public class Main {
                             if (input == 0) {
                                 break;
                             } else if (input == 1) {
-                                loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), null);
+                                loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), "выполнения");
 
                                 for (Habit habit : loggedUser.habits) {
                                     System.out.println(habit.toString());
                                 }
                             } else if (input == 2) {
                                 loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), "создания");
+                                for (Habit habit : loggedUser.habits) {
+                                    System.out.println(habit.toString());
+                                }
                             } else {
                                 System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз");
                             }
