@@ -106,7 +106,6 @@ public class Main {
                 if (input == 0) {
                     break;
                 } else if (input == 1) {
-                    
                     do {
                         System.out.println("Press 0 - Назад");
                         System.out.println("Press 1 - Фильтровать привычки по статусу выполнения");
@@ -143,7 +142,6 @@ public class Main {
                     String frequency = null;
                     boolean isCompleted = false;
                     int userId = loggedUser.getId();
-
 
                     System.out.println("Введите имя привычки");
                     do {
@@ -186,10 +184,38 @@ public class Main {
                     HabitRepository.addHabit(habit, userId);
 
                 } else if (input == 3) {
-                    // nfr
+                    // TODO редактирование привычки
                     System.out.println();
 
                 } else if (input == 4) {
+                    //  удаление привычки
+                    System.out.println("Press 0 - Назад");
+                    System.out.println("Введите id привычки которую хотите удалить");
+
+                    loggedUser.habits = HabitRepository.getAllHabits(loggedUser.getId(), "");
+
+                    assert loggedUser.habits != null;
+                    for (Habit habit : loggedUser.habits) {
+                        System.out.println(habit.toString2());
+                    }
+                    do {
+                        try {
+                            inputStr = scan.nextLine().trim();
+                            input = Integer.parseInt(inputStr);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Вы ввели некорректные данные. Попробуйте еще раз.");
+                        }
+
+                        if (input == 0) {
+                            break;
+                        } else {
+                            //TODO удаляем
+                            boolean resultOfDeletion = HabitRepository.deleteHabit(input);
+                            if (resultOfDeletion)
+                                break;
+                        }
+
+                    } while (true);
 
                 } else {
                     System.out.println("\n\tВы ввели некорректные данные. Попробуйте еще раз.");

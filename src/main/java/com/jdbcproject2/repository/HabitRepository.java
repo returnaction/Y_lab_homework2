@@ -33,6 +33,8 @@ public class HabitRepository {
             query = "SELECT * FROM habits WHERE user_id = ? ORDER BY date ASC;";
         } else if (filter.equals("выполнения")) {
             query = "SELECT * FROM habits WHERE user_id = ? ORDER BY isCompleted ASC, date ASC;";
+        } else {
+            query = "SELECT * FROM habits WHERE user_id = ?;";
         }
 
         try (Connection connection = DbUtils.getConnection();
@@ -45,17 +47,42 @@ public class HabitRepository {
                 habit.setId(resultSet.getInt("id"));
                 habit.setTitle(resultSet.getString("title"));
                 habit.setDescription(resultSet.getString("description"));
-                habit.setDescription(resultSet.getString("frequency"));
+                habit.setFrequency(resultSet.getString("frequency"));
                 habit.setDate(resultSet.getString("date"));
                 habit.setCompleted(resultSet.getBoolean("isCompleted"));
                 habit.setUserId(resultSet.getInt("user_Id"));
 
                 habits.add(habit);
+                habit = null;
             }
             return habits;
         } catch (SQLException e) {
             System.out.println("\n\tОшибка в методе getAllHabits() " + e.getMessage());
             return null;
+        }
+
+    }
+
+    public static boolean deleteHabit(int habitId) {
+
+        String query = "DELETE FROM habits WHERE id= ?;";
+
+        try (Connection connection = DbUtils.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, habitId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("Привычка успешно удалена");
+                return true;
+            } else {
+                System.out.printf("Привычка с ID = %s не была найдена", habitId);
+                return false;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("\n\tОшибка в методе deleteHabit() " + e.getMessage());
+            return false;
         }
 
     }

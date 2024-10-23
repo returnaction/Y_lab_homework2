@@ -53,6 +53,11 @@ public class Habit {
                 '}';
     }
 
+
+    public String toString2() {
+        return "ID - " + id + " | Привычка - " + title;
+    }
+
     public int getId() {
         return id;
     }
